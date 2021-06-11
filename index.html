@@ -27,10 +27,6 @@
         zoom: 12
     });
 
-	//Maker bus image
-	const busMarker = document.createElement('img');
-	busMarker.src = './blue.png';
-
 	counter = 0;
 
 	// Function that change the positions of buses
@@ -52,17 +48,24 @@
 			const lat = bus.attributes.latitude;
 			const lng = bus.attributes.longitude;
 
-			// create the popup
-			var popup = new mapboxgl.Popup({ offset: 25 }).setText(
-			`Route ${bus.relationship.route.data.id} <br>
-			 Occupancy: ${bus.attributes.occupancy_status}`
+			//create the popup
+			var popup = new mapboxgl.Popup({ offset: 25 })
+			.setHTML(
+			`<div>Bus ID: ${bus.attributes.label} </div>
+			<div>Occupancy: ${bus.attributes.occupancy_status}</div>`
 			);
+			console.log(popup)
+
+			//Maker bus image
+			const busMarker = document.createElement('img');
+			busMarker.src = './blue.png';
 
 			// create the marker
 			var marker = new mapboxgl.Marker({
 				element: busMarker,
 			})
 			.setLngLat([lng, lat])
+			.setPopup(popup)
 			.addTo(map);
 			markers.push(marker);
 		});
