@@ -9,8 +9,6 @@ var map = new mapboxgl.Map({
     zoom: 12
 });
 
-counter = 0;
-
 let busRoutes = [];
 // Get routes and asign colors
 let getRoutes = (bus) => {
@@ -35,20 +33,16 @@ let getRoutes = (bus) => {
     return {id: route, color: color};
 }
 
+markers = [];
 // Function that change the positions of buses
 async function run(){
-    // remove last buses list    
-    if(counter !== 0) {
-        markers.forEach(marker => {
-            marker.remove();
-        });
-    }
 
     // get bus data
     const busData = await getBusData();
 
-    markers = [];
     busData.forEach(bus => {
+        
+        const busId = bus.id
         //get routes list
         const routeData = getRoutes(bus);
         
@@ -56,40 +50,60 @@ async function run(){
         const lat = bus.attributes.latitude;
         const lng = bus.attributes.longitude;
 
-        //create the popup
-        var popup = new mapboxgl.Popup({ offset: 25 })
-        .setHTML(
-        `<div>Route: ${routeData.id} </div>
-        <div>Occupancy: ${bus.attributes.occupancy_status}</div>`
-        );
+        let founded = false;
+        for (let i = 0; i < markers.length; i++) {
+            const savedMarker = markers[i];
 
-        //Maker bus image
-        const busMarker = document.createElement('div');
-        busMarker.classList.add('busmarker');
-        busMarker.innerHTML = `<svg id="bus-15" x="0px" y="0px" viewBox="0 0 15 15" style="enable-background:new 0 0 15 15;" xml:space="preserve">
-            <style type="text/css">
-                .bus02{fill:#FFFFFF;}
-            </style>
-            <path class="bus01" style="fill:${routeData.color};" d="M4,0C2.6,0,1,0.7,1,2.7v5.5V12c0,0,0,1,1,1v1c0,0,0,1,1,1s1-1,1-1v-1h7v1c0,0,0,1,1,1s1-1,1-1v-1c0,0,1,0,1-1V2.7
-                c0-2-1.2-2.7-2.6-2.7H4z"/>
-            <path class="bus02" d="M4.2,1.5h6.5c0.1,0,0.2,0.1,0.2,0.2S10.9,2,10.8,2H4.2C4.1,2,4,1.9,4,1.8S4.1,1.5,4.2,1.5z"/>
-            <path class="bus02" d="M3,3h9c1,0,1,1,1,1v3c0,0,0,1-1,1H3C2,8,2,7,2,7V4C2,4,2,3,3,3z"/>
-            <circle class="bus02" cx="3" cy="11" r="1"/>
-            <circle class="bus02" cx="12" cy="11" r="1"/>
-        </svg>`
+            if (savedMarker.id === busId) {
+                savedMarker.setLngLat([lng, lat])
+                founded = true;
+            }
+        }
+        if (!founded) {
+            //create the popup
+            var popup = new mapboxgl.Popup({ offset: 25 })
+            .setHTML(
+            `<div>Route: ${routeData.id} </div>
+            <div>Occupancy: ${bus.attributes.occupancy_status}</div>`
+            );
 
-        // create the marker
-        var marker = new mapboxgl.Marker({
-            element: busMarker,
-        })
-        .setLngLat([lng, lat])
-        .setPopup(popup)
-        .addTo(map);
-        markers.push(marker);
+            //Maker bus image
+            const busMarker = document.createElement('div');
+            busMarker.classList.add('busmarker');
+            busMarker.innerHTML = `<svg id="bus-15" x="0px" y="0px" viewBox="0 0 15 15" style="enable-background:new 0 0 15 15;" xml:space="preserve">
+                <style type="text/css">
+                    .bus02{fill:#FFFFFF;}
+                </style>
+                <path class="bus01" style="fill:${routeData.color};" d="M4,0C2.6,0,1,0.7,1,2.7v5.5V12c0,0,0,1,1,1v1c0,0,0,1,1,1s1-1,1-1v-1h7v1c0,0,0,1,1,1s1-1,1-1v-1c0,0,1,0,1-1V2.7
+                    c0-2-1.2-2.7-2.6-2.7H4z"/>
+                <path class="bus02" d="M4.2,1.5h6.5c0.1,0,0.2,0.1,0.2,0.2S10.9,2,10.8,2H4.2C4.1,2,4,1.9,4,1.8S4.1,1.5,4.2,1.5z"/>
+                <path class="bus02" d="M3,3h9c1,0,1,1,1,1v3c0,0,0,1-1,1H3C2,8,2,7,2,7V4C2,4,2,3,3,3z"/>
+                <circle class="bus02" cx="3" cy="11" r="1"/>
+                <circle class="bus02" cx="12" cy="11" r="1"/>
+            </svg>`
+
+            // create the marker
+            var marker = new mapboxgl.Marker({
+                element: busMarker,
+            })
+            .setLngLat([lng, lat])
+            .setPopup(popup)
+            .addTo(map);
+
+            marker.id = busId;
+
+            markers.push(marker);
+        }  
+    });
+    
+    //remove bus markers 
+    markers.forEach(savedMarker => {
+        if (!busData.some(bus => bus.id === savedMarker.id)) {
+            
+            savedMarker.remove();
+        }
     });
 
-    // timer
-    counter++;
     setTimeout(run, 15000);
 }
 
