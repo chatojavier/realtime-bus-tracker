@@ -96,7 +96,7 @@ async function run(){
         }  
     });
     
-    //remove bus markers 
+    //remove missing bus markers 
     markers.forEach(savedMarker => {
         if (!busData.some(bus => bus.id === savedMarker.id)) {
             
@@ -115,4 +115,7 @@ async function getBusData(){
     return json.data;
 }
 
-run();
+// Run markers code when map is loaded
+map.on('load', function () {
+    run()
+})
