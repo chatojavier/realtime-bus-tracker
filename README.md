@@ -10,7 +10,7 @@ The source code was given by Dr. John Williams. Proffesor of this program.
 
 ## Usage
 
-Este fue uno de los proyectos javascript desarrollados para el programa fullstack MITxPro. En este caso utilicé la API MapBox, un servicio de mapas web con versión gratuita. Usando datos abiertos del gobierno de la ciudad de Boston, pude crear marcadores que nos muestran las ubicaciones en vivo de los autobuses de la ciudad. Coloreé cada línea de autobús con un color diferente para que pudieras diferenciarlas.
+This was one of the javascript projects developed for the fullstack MITxPro program. In this case I used the MapBox API, a free version web map service. Using open data from the Boston city government, I was able to create markers that show us the live locations of city buses. I colored each bus line with a different color so you could tell them apart
 
 You could see this app working in this link: [https://chatojavier.github.io/realtime-bus-tracker/](https://chatojavier.github.io/realtime-bus-tracker/)
 
