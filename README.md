@@ -13,6 +13,8 @@ The source code was given by Dr. John Williams. Proffesor of this program.
 In this case I used the API from MapBox. A service of web maps with a free version.
 Using open data from the Boston city goverment, I was able to create markers that show us the live locations of the city's buses. I colored each bus line with diferent color so that they can be easier to differentiate.
 
+You could see this app working in this link: [https://chatojavier.github.io/realtime-bus-tracker/](https://chatojavier.github.io/realtime-bus-tracker/)
+
 ## Instalation
 
 If you want to use this code, just download or clone this repository.
